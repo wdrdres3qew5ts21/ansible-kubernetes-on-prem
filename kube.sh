@@ -2,10 +2,11 @@
 # ansible-kubernetes-on-prem
 # please fil kubernetes control plane
 KUBE_CONTROL_PLANE="depa1"
+export VERSION=1.20
+export OS=xUbuntu_20.04
 
 apt-get update -y
 
-modprobe br_netfilter
 
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
@@ -46,8 +47,7 @@ sudo apt-get update
 sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
-export VERSION=1.18
-export OS=xUbuntu_20.04
+
 echo "$OS  $VERSION"
 
 echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
@@ -58,11 +58,15 @@ curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/
 
 apt-get update -y
 apt-get install cri-o cri-o-runc -y
+cp 02-cgroup-manager.conf /etc/crio/crio.conf.d/
+
+systemctl daemon-reload
+
+systemctl restart cri-o
 
 
 if [ "$HOSTNAME" = "$KUBE_CONTROL_PLANE" ]; then
     echo "=== Inittials Control Plane ==="
-    sudo kubeadm init phase control-plane controller-manager
     sudo kubeadm init --control-plane-endpoint depa1.sit.kmutt.ac.th  --upload-certs
 else
     echo "=== Join Worker Node to Control Plane ==="
