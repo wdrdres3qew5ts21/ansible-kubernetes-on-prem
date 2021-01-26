@@ -63,7 +63,7 @@ apt-get install cri-o cri-o-runc -y
 if [ "$HOSTNAME" = "$KUBE_CONTROL_PLANE" ]; then
     echo "=== Inittials Control Plane ==="
     sudo kubeadm init phase control-plane controller-manager
-    sudo kubeadm init --control-plane-endpoint depa1.sit.kmutt.ac.th  --upload-cert
+    sudo kubeadm init --control-plane-endpoint depa1.sit.kmutt.ac.th  --upload-certs
 else
     echo "=== Join Worker Node to Control Plane ==="
 fi
