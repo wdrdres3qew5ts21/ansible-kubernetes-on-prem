@@ -54,3 +54,9 @@ apt-get update -y
 apt-get install cri-o cri-o-runc -y
 
 cp config.yaml /var/lib/kubelet/
+
+root@depa1:/home/depaadmin/ansible-kubernetes-on-prem# kubeadm init phase control-plane all
+[control-plane] Using manifest folder "/etc/kubernetes/manifests"
+[control-plane] Creating static Pod manifest for "kube-apiserver"
+[control-plane] Creating static Pod manifest for "kube-controller-manager"
+[control-plane] Creating static Pod manifest for "kube-scheduler"

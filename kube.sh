@@ -1,8 +1,13 @@
 #!/bin/bash
 # ansible-kubernetes-on-prem
-sudo su
+# please fil kubernetes control plane
+KUBE_CONTROL_PLANE="depa1"
+
+apt-get update -y
 
 modprobe br_netfilter
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
 
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
 br_netfilter
@@ -54,4 +59,12 @@ curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/
 apt-get update -y
 apt-get install cri-o cri-o-runc -y
 
-cp config.yaml /var/lib/kubelet/
+
+if [ "$HOSTNAME" = "$KUBE_CONTROL_PLANE" ]; then
+    echo "=== Inittials Control Plane ==="
+    sudo kubeadm init phase control-plane controller-manager
+    sudo kubeadm init --control-plane-endpoint depa1.sit.kmutt.ac.th  --upload-cert
+else
+    echo "=== Join Worker Node to Control Plane ==="
+fi
+
