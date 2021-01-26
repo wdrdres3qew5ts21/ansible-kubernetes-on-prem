@@ -1,3 +1,4 @@
+#!/bin/bash
 # ansible-kubernetes-on-prem
 sudo su
 
